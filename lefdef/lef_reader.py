@@ -1,4 +1,4 @@
-__all__ = ["C_LedReader"]
+__all__ = ["C_LefReader"]
 
 import ctypes
 import os
@@ -7,7 +7,7 @@ from .lef import C_Lef
 class C_LefReaderInstance(ctypes.Structure):
         pass
 
-class C_LedReader():
+class C_LefReader():
     def __init__(self) -> None:
         # Store all open pointers of lef files
         self.sessions = []

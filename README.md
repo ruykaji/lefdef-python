@@ -4,7 +4,7 @@ This repository provides a Python interface to parse LEF (Library Exchange Forma
 
 ## Features
 
-- **LEF Reader**: A Python class `C_LedReader` that allows reading LEF files and extracting the design data. [View Code](https://github.com/ruykaji/lefdef-python/blob/main/lefdef/lef_reader.py)
+- **LEF Reader**: A Python class `C_LefReader` that allows reading LEF files and extracting the design data. [View Code](https://github.com/ruykaji/lefdef-python/blob/main/lefdef/lef_reader.py)
   
 - **LEF Data Structures**: The repository defines various data structures to represent the design elements in a LEF file, such as `C_Lef`, `C_Macro`, `C_Pin`, `C_Port`, `C_Rect`, and `C_Obstruction`. These structures provide a Pythonic way to access the design data. [View Code](https://github.com/ruykaji/lefdef-python/blob/main/lefdef/lef.py)
 
@@ -17,7 +17,7 @@ To use the LEF reader, you can follow the example provided in the `test.py` file
 ```python
 from lefdef import C_LedReader
 
-lef_reader = C_LedReader()
+lef_reader = C_LefReader()
 lef = lef_reader.read("/path/to/your/LEF/file.lef")
 ```
 
