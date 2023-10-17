@@ -15,7 +15,7 @@ This repository provides a Python interface to parse LEF (Library Exchange Forma
 To use the LEF reader, you can follow the example provided in the `test.py` file:
 
 ```python
-from lefdef import C_LedReader
+from lefdef import C_LefReader
 
 lef_reader = C_LefReader()
 lef = lef_reader.read("/path/to/your/LEF/file.lef")
