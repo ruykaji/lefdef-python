@@ -15,7 +15,7 @@ find_library(LEF NAMES liblef.a PATHS ${CMAKE_SOURCE_DIR}/external/lef/lib)
 
 file(GLOB GLOBAL ${CMAKE_SOURCE_DIR}/src/*.cpp ${CMAKE_SOURCE_DIR}/src/*.hpp)
 
-add_library(lefdef STATIC ${GLOBAL})
+add_library(lefdef SHARED ${GLOBAL})
 
 target_link_libraries(lefdef PRIVATE ${DEF} ${LEF})
 

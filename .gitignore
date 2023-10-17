@@ -1,2 +1,10 @@
+# General
 .vscode
+
+# Python
+**/__pycache__
+
+# C/C++
 **/build
+**/*.so
+**/*.a
