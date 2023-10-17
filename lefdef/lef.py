@@ -166,7 +166,7 @@ class C_Lef(ctypes.Structure):
         super().__init__()
 
         self.c_macros: List[C_Macro] | None = None
-        self.c_num_macros: int = 0 
+        self.c_num_macros: int = 0
 
     def print(self):
         print("\033[95m[LEF]\033[0m")

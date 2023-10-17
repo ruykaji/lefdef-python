@@ -1,5 +1,7 @@
-from lefdef import readLef
+from lefdef import C_LedReader
 
-lef = readLef("/home/alaie/Nangate.lef")
+lef_reader = C_LedReader()
 
-lef.print()
+lef = lef_reader.read("/home/alaie/Nangate.lef")
+
+# lef.print()

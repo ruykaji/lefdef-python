@@ -24,12 +24,12 @@ Def* DefReader::read(const char* t_fileName)
     // ====================================================
 
     defrSetDieAreaCbk(&dieAreaCallback);
-    defrSetComponentStartCbk(&componentStartCallback);
-    defrSetComponentCbk(&componentCallback);
-    defrSetComponentEndCbk(&componentEndCallback);
-    defrSetPinCbk(&pinCallback);
-    defrSetNetCbk(&netCallback);
-    defrSetViaCbk(&viaCallback);
+    // defrSetComponentStartCbk(&componentStartCallback);
+    // defrSetComponentCbk(&componentCallback);
+    // defrSetComponentEndCbk(&componentEndCallback);
+    // defrSetPinCbk(&pinCallback);
+    // defrSetNetCbk(&netCallback);
+    // defrSetViaCbk(&viaCallback);
 
     // Open def file and parser it
     // ====================================================
@@ -51,7 +51,7 @@ Def* DefReader::read(const char* t_fileName)
     fclose(file);
     defrClear();
 
-    return defiDebug_h;
+    return defInstance;
 }
 
 // Static methods

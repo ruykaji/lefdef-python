@@ -4,20 +4,32 @@
 extern "C" {
 #endif
 
+// Lef section
+// ============================================================
+
 LefReader* createLefReader()
 {
     return new LefReader();
 }
 
-void deleteLefReader(LefReader* reader)
+void deleteLefReader(LefReader* t_reader)
 {
-    delete reader;
+    delete t_reader;
 }
 
-Lef* read(LefReader* reader, const char* t_fileName)
+void deleteLef(Lef* t_lef)
 {
-    return reader->read(t_fileName);
+    delete t_lef;
 }
+
+Lef* read(LefReader* t_reader, const char* t_fileName)
+{
+    return t_reader->read(t_fileName);
+}
+
+// Def section
+// ============================================================
+
 
 #ifdef __cplusplus
 }

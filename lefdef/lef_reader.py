@@ -1,27 +1,48 @@
-__all__ = ["readLef"]
+__all__ = ["C_LedReader"]
 
 import ctypes
 import os
 from .lef import C_Lef
 
-class C_LefReader(ctypes.Structure):
+class C_LefReaderInstance(ctypes.Structure):
         pass
 
-def readLef(file_name) -> C_Lef:
-    lefdef = ctypes.CDLL(os.path.join(os.path.dirname(__file__), "lib/liblefdef.so"))
+class C_LedReader():
+    def __init__(self) -> None:
+        # Store all open pointers of lef files
+        self.sessions = []
 
-    lefdef.createLefReader.restype = ctypes.POINTER(C_LefReader)
-    lefdef.createLefReader.argtypes = []
+        # Open library
+        self.lefdef = ctypes.CDLL(os.path.join(os.path.dirname(__file__), "lib/liblefdef.so"))
 
-    lefdef.deleteLefReader.restype = None
-    lefdef.deleteLefReader.argtypes = [ctypes.POINTER(C_LefReader)]
+        # Add create reader function
+        self.lefdef.createLefReader.restype = ctypes.POINTER(C_LefReaderInstance)
+        self.lefdef.createLefReader.argtypes = []
 
-    lefdef.read.restype = ctypes.POINTER(C_Lef)
-    lefdef.read.argtypes = [ctypes.POINTER(C_LefReader), ctypes.c_char_p]
+        # Add delete reader function
+        self.lefdef.deleteLefReader.restype = None
+        self.lefdef.deleteLefReader.argtypes = [ctypes.POINTER(C_LefReaderInstance)]
 
-    reader = lefdef.createLefReader()
-    result = lefdef.read(reader, file_name.encode("utf-8"))
+        # Add delete lef function
+        self.lefdef.deleteLef.restype = None
+        self.lefdef.deleteLef.argtypes = [ctypes.POINTER(C_Lef)]
 
-    lefdef.deleteLefReader(reader)
+        # Add read reader function
+        self.lefdef.read.restype = ctypes.POINTER(C_Lef)
+        self.lefdef.read.argtypes = [ctypes.POINTER(C_LefReaderInstance), ctypes.c_char_p]
 
-    return result.contents
+        # Create reader instance as pointer
+        self.reader = self.lefdef.createLefReader()
+    
+    def read(self, file_name : str) -> C_Lef:
+        result = self.lefdef.read(self.reader, file_name.encode("utf-8"))
+
+        self.sessions.append(result)
+
+        return result.contents
+         
+    def __del__(self):
+         for lef in self.sessions:
+              self.lefdef.deleteLef(lef)
+         
+         self.lefdef.deleteLefReader(self.reader)
