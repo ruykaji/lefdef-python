@@ -1,35 +1,66 @@
 #include "src/lef_reader.hpp"
+#include "src/def_reader.hpp"
+
+
+// Lef methods
+// =========================================================
 
 LefReader* createLefReader()
 {
     return new LefReader();
 }
 
-void deleteLefReader(LefReader* reader)
+void deleteLefReader(LefReader* t_reader)
 {
-    delete reader;
+    delete t_reader;
 }
 
-Lef* read(LefReader* reader, const char* t_fileName)
+lef::Lef* read(LefReader* t_reader, const char* t_fileName)
 {
-    return reader->read(t_fileName);
+    return t_reader->read(t_fileName);
+}
+
+// Def methods
+// =========================================================
+
+DefReader* createDefReader()
+{
+    return new DefReader();
+}
+
+void deleteDefReader(DefReader* t_reader)
+{
+    delete t_reader;
+}
+
+def::Def* read(DefReader* t_reader, const char* t_fileName)
+{
+    return t_reader->read(t_fileName);
 }
 
 int main()
 {
-    LefReader* reader = createLefReader();
-    Lef* lef = read(reader, "/home/alaie/Nangate.lef");
-    deleteLefReader(reader);
+    // LefReader* lefReader = createLefReader();
+    // lef::Lef* lef = read(lefReader, "/home/alaie/Nangate.lef");
+    // deleteLefReader(lefReader);
 
-    Macro macro {};
+    // lef::Macro macro {};
 
-    for (std::size_t i = 0; i < lef->_numMacros; ++i) {
-        macro = lef->macros_[i];
-    }
+    // for (std::size_t i = 0; i < lef->_numMacros; ++i) {
+    //     macro = lef->macros_[i];
+    // }
 
-    lef->destroy();
+    // lef->destroy();
 
-    delete lef;
+    // delete lef;
+
+    DefReader* defReader = createDefReader();
+    def::Def* def = read(defReader, "/home/alaie/bsg_chip.def");
+    deleteDefReader(defReader);
+
+    //def->destroy();
+
+    delete def;
 
     return 0;
 }

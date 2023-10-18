@@ -2,7 +2,7 @@
 
 #include "lef.hpp"
 
-Rect::Rect(const double& t_xl, const double& t_yl, const double& t_xh, const double& t_yh, const char* t_layer)
+lef::Rect::Rect(const double& t_xl, const double& t_yl, const double& t_xh, const double& t_yh, const char* t_layer)
 {
     layer_ = (char*)malloc((strlen(t_layer) + 1) * sizeof(char));
     strcpy(layer_, t_layer);
@@ -13,7 +13,7 @@ Rect::Rect(const double& t_xl, const double& t_yl, const double& t_xh, const dou
     yh_ = std::max(t_yl, t_yh);
 }
 
-void Rect::destroy()
+void lef::Rect::destroy()
 {
     if (layer_) {
         free(layer_);
@@ -21,7 +21,7 @@ void Rect::destroy()
     }
 }
 
-void Port::destroy()
+void lef::Port::destroy()
 {
     if (rects_) {
         for (std::size_t i = 0; i < _numRects; ++i) {
@@ -33,7 +33,7 @@ void Port::destroy()
     }
 }
 
-void Port::addRect(const Rect& t_rect)
+void lef::Port::addRect(const Rect& t_rect)
 {
     if (_numRectsAllocated == _numRects) {
         if (_numRectsAllocated == 0) {
@@ -59,7 +59,7 @@ void Port::addRect(const Rect& t_rect)
     rects_[_numRects++] = t_rect;
 }
 
-void Pin::destroy()
+void lef::Pin::destroy()
 {
     if (ports_) {
         for (std::size_t i = 0; i < _numPorts; ++i) {
@@ -91,7 +91,7 @@ void Pin::destroy()
     }
 }
 
-void Pin::addPort(const Port& t_port)
+void lef::Pin::addPort(const Port& t_port)
 {
     if (_numPortsAllocated == _numPorts) {
         if (_numPortsAllocated == 0) {
@@ -117,7 +117,7 @@ void Pin::addPort(const Port& t_port)
     ports_[_numPorts++] = t_port;
 }
 
-void Obstruction::destroy()
+void lef::Obstruction::destroy()
 {
     if (rects_) {
         for (std::size_t i = 0; i < _numRects; ++i) {
@@ -129,7 +129,7 @@ void Obstruction::destroy()
     }
 }
 
-void Obstruction::addRect(const Rect& t_rect)
+void lef::Obstruction::addRect(const Rect& t_rect)
 {
     if (_numRectsAllocated == _numRects) {
         if (_numRectsAllocated == 0) {
@@ -155,7 +155,7 @@ void Obstruction::addRect(const Rect& t_rect)
     rects_[_numRects++] = t_rect;
 }
 
-void Macro::destroy()
+void lef::Macro::destroy()
 {
     if (pins_) {
         for (std::size_t i = 0; i < _numPins; ++i) {
@@ -194,7 +194,7 @@ void Macro::destroy()
     obs_.destroy();
 }
 
-void Macro::addPin(const Pin& t_pin)
+void lef::Macro::addPin(const Pin& t_pin)
 {
     if (_numPinsAllocated == _numPins) {
         if (_numPinsAllocated == 0) {
@@ -220,7 +220,7 @@ void Macro::addPin(const Pin& t_pin)
     pins_[_numPins++] = t_pin;
 }
 
-void Lef::destroy()
+void lef::Lef::destroy()
 {
     if (macros_) {
         for (std::size_t i = 0; i < _numMacros; ++i) {
@@ -232,7 +232,7 @@ void Lef::destroy()
     }
 }
 
-void Lef::addMacro(const Macro& t_macro)
+void lef::Lef::addMacro(const Macro& t_macro)
 {
     if (_numMacrosAllocated == _numMacros) {
         if (_numMacrosAllocated == 0) {

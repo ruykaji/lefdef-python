@@ -3,6 +3,7 @@
 
 #include <vector>
 
+namespace lef {
 struct Rect {
     char* layer_ {};
 
@@ -106,5 +107,6 @@ struct Lef {
     void destroy();
     void addMacro(const Macro& t_macro);
 };
+}
 
 #endif

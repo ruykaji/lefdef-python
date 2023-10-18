@@ -17,12 +17,12 @@ void deleteLefReader(LefReader* t_reader)
     delete t_reader;
 }
 
-void deleteLef(Lef* t_lef)
+void deleteLef(lef::Lef* t_lef)
 {
     delete t_lef;
 }
 
-Lef* read(LefReader* t_reader, const char* t_fileName)
+lef::Lef* read(LefReader* t_reader, const char* t_fileName)
 {
     return t_reader->read(t_fileName);
 }

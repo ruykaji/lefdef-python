@@ -11,7 +11,7 @@ struct LefReader {
     LefReader(const LefReader&) = delete;
     LefReader& operator=(const LefReader&) = delete;
 
-    Lef* read(const char* t_fileName);
+    lef::Lef* read(const char* t_fileName);
 
 private:
     static int macroBeginCallback(lefrCallbackType_e t_type, const char* t_string, void* t_userData);

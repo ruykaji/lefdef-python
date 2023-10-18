@@ -4,7 +4,7 @@
 
 #include "lef_reader.hpp"
 
-Lef* LefReader::read(const char* t_fileName)
+lef::Lef* LefReader::read(const char* t_fileName)
 {
     // Init lef
     // ====================================================
@@ -32,7 +32,7 @@ Lef* LefReader::read(const char* t_fileName)
         throw std::runtime_error("Can't open the file!");
     }
 
-    Lef* lefInstance = new Lef();
+    lef::Lef* lefInstance = new lef::Lef();
 
     int readStatus = lefrRead(file, t_fileName, lefInstance);
 
@@ -55,8 +55,8 @@ int LefReader::macroBeginCallback(lefrCallbackType_e t_type, const char* t_strin
         return 2;
     }
 
-    Lef* lefInstance = static_cast<Lef*>(t_userData);
-    Macro macro {};
+    lef::Lef* lefInstance = static_cast<lef::Lef*>(t_userData);
+    lef::Macro macro {};
 
     lefInstance->addMacro(macro);
 
@@ -69,8 +69,8 @@ int LefReader::macroCallback(lefrCallbackType_e t_type, lefiMacro* t_macro, void
         return 2;
     }
 
-    Lef* lefInstance = static_cast<Lef*>(t_userData);
-    Macro* macro = &lefInstance->macros_[lefInstance->_numMacros - 1];
+    lef::Lef* lefInstance = static_cast<lef::Lef*>(t_userData);
+    lef::Macro* macro = &lefInstance->macros_[lefInstance->_numMacros - 1];
 
     macro->name_ = (char*)malloc((strlen(t_macro->name()) + 1) * sizeof(char));
     strcpy(macro->name_, t_macro->name());
@@ -123,7 +123,7 @@ int LefReader::pinCallback(lefrCallbackType_e t_type, lefiPin* t_pin, void* t_us
         return 2;
     }
 
-    Pin pin {};
+    lef::Pin pin {};
 
     pin.name_ = (char*)malloc((strlen(t_pin->name()) + 1) * sizeof(char));
     strcpy(pin.name_, t_pin->name());
@@ -147,7 +147,7 @@ int LefReader::pinCallback(lefrCallbackType_e t_type, lefiPin* t_pin, void* t_us
 
     for (std::size_t i = 0; i < t_pin->numPorts(); ++i) {
         lefiGeometries* portGeom = t_pin->port(i);
-        Port port {};
+        lef::Port port {};
 
         for (std::size_t i = 0; i < portGeom->numItems(); ++i) {
             switch (portGeom->itemType(i)) {
@@ -158,7 +158,7 @@ int LefReader::pinCallback(lefrCallbackType_e t_type, lefiPin* t_pin, void* t_us
             case lefiGeomEnum::lefiGeomRectE: {
                 lefiGeomRect* portRect = portGeom->getRect(i);
 
-                port.addRect(Rect(portRect->xl, portRect->yl, portRect->xh, portRect->yh, layer));
+                port.addRect(lef::Rect(portRect->xl, portRect->yl, portRect->xh, portRect->yh, layer));
                 break;
             }
             default:
@@ -169,8 +169,8 @@ int LefReader::pinCallback(lefrCallbackType_e t_type, lefiPin* t_pin, void* t_us
         pin.addPort(port);
     }
 
-    Lef* lefInstance = static_cast<Lef*>(t_userData);
-    Macro* macro = &lefInstance->macros_[lefInstance->_numMacros - 1];
+    lef::Lef* lefInstance = static_cast<lef::Lef*>(t_userData);
+    lef::Macro* macro = &lefInstance->macros_[lefInstance->_numMacros - 1];
 
     macro->addPin(pin);
 
@@ -185,7 +185,7 @@ int LefReader::obsCallback(lefrCallbackType_e t_type, lefiObstruction* t_obs, vo
 
     lefiGeometries* osbGeom = t_obs->geometries();
     const char* layer {};
-    Obstruction obs {};
+    lef::Obstruction obs {};
 
     for (std::size_t i = 0; i < osbGeom->numItems(); ++i) {
         switch (osbGeom->itemType(i)) {
@@ -196,7 +196,7 @@ int LefReader::obsCallback(lefrCallbackType_e t_type, lefiObstruction* t_obs, vo
         case lefiGeomEnum::lefiGeomRectE: {
             lefiGeomRect* portRect = osbGeom->getRect(i);
 
-            obs.addRect(Rect(portRect->xl, portRect->yl, portRect->xh, portRect->yh, layer));
+            obs.addRect(lef::Rect(portRect->xl, portRect->yl, portRect->xh, portRect->yh, layer));
 
             break;
         }
@@ -205,8 +205,8 @@ int LefReader::obsCallback(lefrCallbackType_e t_type, lefiObstruction* t_obs, vo
         }
     }
 
-    Lef* lefInstance = static_cast<Lef*>(t_userData);
-    Macro* macro = &lefInstance->macros_[lefInstance->_numMacros - 1];
+    lef::Lef* lefInstance = static_cast<lef::Lef*>(t_userData);
+    lef::Macro* macro = &lefInstance->macros_[lefInstance->_numMacros - 1];
 
     macro->obs_ = obs;
 
