@@ -18,9 +18,9 @@ private:
 
     static int dieAreaCallback(defrCallbackType_e t_type, defiBox* t_box, void* t_userData);
 
-    // static int componentStartCallback(defrCallbackType_e t_type, int t_number, void* t_userData);
+    static int componentStartCallback(defrCallbackType_e t_type, int t_number, void* t_userData);
 
-    // static int componentCallback(defrCallbackType_e t_type, defiComponent* t_component, void* t_userData);
+    static int componentCallback(defrCallbackType_e t_type, defiComponent* t_component, void* t_userData);
 
     // static int componentEndCallback(defrCallbackType_e t_type, void* t, void* t_userData);
 
@@ -30,7 +30,7 @@ private:
 
     // static int fillCallback(defrCallbackType_e t_type, defiFill* t_shiftLayers, void* t_userData);
 
-    // static int gcellGridCallback(defrCallbackType_e t_type, defiGcellGrid* t_grid, void* t_userData);
+    static int gcellGridCallback(defrCallbackType_e t_type, defiGcellGrid* t_grid, void* t_userData);
 
     // static int groupCallback(defrCallbackType_e t_type, defiGroup* t_shiftLayers, void* t_userData);
 
@@ -50,7 +50,7 @@ private:
 
     // static int regionCallback(defrCallbackType_e t_type, defiRegion* t_region, void* t_userData);
 
-    // static int rowCallback(defrCallbackType_e t_type, defiRow* t_row, void* t_userData);
+    static int rowCallback(defrCallbackType_e t_type, defiRow* t_row, void* t_userData);
 
     // static int scanchainCallback(defrCallbackType_e t_type, defiScanchain* t_scanchain, void* t_userData);
 
@@ -60,7 +60,7 @@ private:
 
     // static int stylesCallback(defrCallbackType_e t_type, defiStyles* t_style, void* t_userData);
 
-    // static int trackCallback(defrCallbackType_e t_type, defiTrack* t_track, void* t_userData);
+    static int trackCallback(defrCallbackType_e t_type, defiTrack* t_track, void* t_userData);
 
     // static int viaCallback(defrCallbackType_e t_type, defiVia* t_via, void* t_userData);
 

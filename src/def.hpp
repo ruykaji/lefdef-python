@@ -10,10 +10,18 @@ struct Track{
 };
 
 struct GCellGrid{
+    int offsetX {};
+    int offsetY {};
+    int numX{};
+    int numY{};
+    double stepX{};
+    double stepY{};
 
+    GCellGrid() = default;
+    GCellGrid() = default;
 };
 
-struct Components{
+struct Component{
 
 };
 
@@ -26,10 +34,17 @@ struct Net{
 };
 
 struct Def {
+    int* dieAreaWidth_ {};
+    int* dieAreaHeight_ {};
+    int numPoints {};
+
+    Component* components_{};
 
 
     Def() = default;
     ~Def() = default;
+
+    void destroy();
 };
 
 #endif

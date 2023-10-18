@@ -24,8 +24,8 @@ Def* DefReader::read(const char* t_fileName)
     // ====================================================
 
     defrSetDieAreaCbk(&dieAreaCallback);
-    // defrSetComponentStartCbk(&componentStartCallback);
-    // defrSetComponentCbk(&componentCallback);
+    defrSetComponentStartCbk(&componentStartCallback);
+    defrSetComponentCbk(&componentCallback);
     // defrSetComponentEndCbk(&componentEndCallback);
     // defrSetPinCbk(&pinCallback);
     // defrSetNetCbk(&netCallback);
@@ -62,7 +62,48 @@ int DefReader::dieAreaCallback(defrCallbackType_e t_type, defiBox* t_box, void* 
         return 2;
     }
 
+    Def* defInstance = static_cast<Def*>(t_userData);
+    defiPoints points = t_box->getPoint();
 
+    defInstance->dieAreaWidth_ = (int*)malloc(sizeof(int)*points.numPoints);
+    defInstance->dieAreaHeight_ = (int*)malloc(sizeof(int)*points.numPoints);
+    
+    for(std::size_t i =0 ;i < points.numPoints; ++i){
+        defInstance->dieAreaWidth_[i] = points.x[i];
+        defInstance->dieAreaHeight_[i] = points.y[i];
+    }
+
+    return 0;
+}
+
+int DefReader::componentStartCallback(defrCallbackType_e t_type, int t_number, void* t_userData){
+    if(t_type != defrComponentStartCbkType){
+        return 2;
+    }
+
+    Def* defInstance = static_cast<Def*>(t_userData);
+
+    defInstance->components_ = (Component*)malloc(sizeof(Component) * t_number);
+
+    return 0;
+}
+
+int DefReader::componentCallback(defrCallbackType_e t_type, defiComponent* t_component, void* t_userData){
+    if(t_type != defrComponentCbkType){
+        return 2;
+    }
+
+    Def* defInstance = static_cast<Def*>(t_userData);
+
+    return 0;
+}
+
+int DefReader::gcellGridCallback(defrCallbackType_e t_type, defiGcellGrid* t_grid, void* t_userData){
+    if(t_type != defrGcellGridCbkType){
+        return 2;
+    }
+
+    Def* defInstance = static_cast<Def*>(t_userData);
 
     return 0;
 }
