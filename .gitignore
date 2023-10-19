@@ -3,8 +3,11 @@
 
 # Python
 **/__pycache__
+lefdef.egg-info
+dist
 
 # C/C++
 **/build
 **/*.so
 **/*.a
+**/*.dll

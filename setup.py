@@ -2,8 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='lefdef',
-    version='0.1.0',
+    version='0.3.0',
     packages=find_packages(),
+    package_data={
+        'lefdef': ['lib/*.*'],
+    },
     url='https://github.com/ruykaji/lefdef-python',
     license='MIT',
     author='ruykaji',
