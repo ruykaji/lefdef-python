@@ -40,25 +40,25 @@ def::Def* read(DefReader* t_reader, const char* t_fileName)
 
 int main()
 {
-    // LefReader* lefReader = createLefReader();
-    // lef::Lef* lef = read(lefReader, "/home/alaie/Nangate.lef");
-    // deleteLefReader(lefReader);
+    LefReader* lefReader = createLefReader();
+    lef::Lef* lef = read(lefReader, "/home/alaie/Nangate.lef");
+    deleteLefReader(lefReader);
 
-    // lef::Macro macro {};
+    lef::Macro macro {};
 
-    // for (std::size_t i = 0; i < lef->_numMacros; ++i) {
-    //     macro = lef->macros_[i];
-    // }
+    for (std::size_t i = 0; i < lef->_numMacros; ++i) {
+        macro = lef->macros_[i];
+    }
 
-    // lef->destroy();
+    lef->destroy();
 
-    // delete lef;
+    delete lef;
 
     DefReader* defReader = createDefReader();
     def::Def* def = read(defReader, "/home/alaie/bsg_chip.def");
     deleteDefReader(defReader);
 
-    //def->destroy();
+    def->destroy();
 
     delete def;
 

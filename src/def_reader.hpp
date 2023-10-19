@@ -26,8 +26,6 @@ private:
 
     static int netCallback(defrCallbackType_e t_type, defiNet* t_net, void* t_userData);
 
-    static int specialNetCallback(defrCallbackType_e t_type, defiNet* t_net, void* t_userData);
-
     static int pinStartCallback(defrCallbackType_e t_type, int t_number, void* t_userData);
 
     static int pinCallback(defrCallbackType_e t_type, defiPin* t_pinProp, void* t_userData);
