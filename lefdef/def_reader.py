@@ -2,6 +2,7 @@ __all__ = ["C_DefReader"]
 
 import ctypes
 import os
+import platform
 from ._def import C_Def
 
 class C_DefReaderInstance(ctypes.Structure):
@@ -13,7 +14,12 @@ class C_DefReader():
         self.sessions = []
 
         # Open library
-        self.lefdef = ctypes.CDLL(os.path.join(os.path.dirname(__file__), "lib/liblefdef.so"))
+        if(platform.system()=="Windows"):
+            self.lefdef = ctypes.CDLL(os.path.join(os.path.dirname(__file__), "lib/liblefdef.dll"))
+
+        # Open library
+        if(platform.system()=="Linux"):
+            self.lefdef = ctypes.CDLL(os.path.join(os.path.dirname(__file__), "lib/liblefdef.so"))
 
         # Add create reader function
         self.lefdef.createDefReader.restype = ctypes.POINTER(C_DefReaderInstance)
