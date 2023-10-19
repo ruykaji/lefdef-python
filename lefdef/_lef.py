@@ -1,9 +1,9 @@
-__all__ = ["C_Def"]
+__all__ = ["C_Lef"]
 
 import ctypes
 from typing import ByteString, List
 
-class C_Rect(ctypes.Structure):
+class C_Lef_Rect(ctypes.Structure):
     _fields_ = [("c_layer", ctypes.c_char_p),
                 ("c_xl", ctypes.c_double),
                 ("c_yl", ctypes.c_double),
@@ -28,43 +28,15 @@ class C_Rect(ctypes.Structure):
         print(f"\033[92m{' ' *(start - 3)}---| \033[93mxh: \033[94m", self.c_xh)
         print(f"\033[92m{' ' *(start - 3)}---| \033[93myh: \033[94m", self.c_yh)
 
-class C_Row(ctypes.Structure):
-    _fields_ = [("c_name", ctypes.c_char_p),
-                ("c_macro", ctypes.c_char_p),
-                ("c_x", ctypes.c_double),
-                ("c_y", ctypes.c_double),
-                ("c_num_x", ctypes.c_double),
-                ("c_num_y", ctypes.c_double),
-                ("c_step_x", ctypes.c_double),
-                ("c_step_y", ctypes.c_double),
-            ]
-    
-    def __init__(self) -> None:
-        super().__init__()
-
-        self.c_layer: ByteString | None = None
-        self.c_xl: float = 0.0
-        self.c_xh: float = 0.0
-        self.c_yl: float = 0.0
-        self.c_yh: float = 0.0
-
-    def print(self, start : int = 0):
-        print(f"\033[95m{' ' *(start - 3)}[RECT]\033[0m")
-        print(f"\033[92m{' ' *(start - 3)}---| \033[93mlayer: \033[94m", self.c_layer)
-        print(f"\033[92m{' ' *(start - 3)}---| \033[93mxl: \033[94m", self.c_xl)
-        print(f"\033[92m{' ' *(start - 3)}---| \033[93myl: \033[94m", self.c_yl)
-        print(f"\033[92m{' ' *(start - 3)}---| \033[93mxh: \033[94m", self.c_xh)
-        print(f"\033[92m{' ' *(start - 3)}---| \033[93myh: \033[94m", self.c_yh)
-
-class C_Port(ctypes.Structure):
-    _fields_ = [("c_rects", ctypes.POINTER(C_Rect)),
+class C_Lef_Port(ctypes.Structure):
+    _fields_ = [("c_rects", ctypes.POINTER(C_Lef_Rect)),
                 ("c_num_rects", ctypes.c_int)
             ]
 
     def __init__(self) -> None:
         super().__init__()
 
-        self.c_rects: List[C_Rect] | None = None
+        self.c_rects: List[C_Lef_Rect] | None = None
         self.c_num_rects: int = 0
 
     def print(self, start : int = 0):
@@ -75,12 +47,12 @@ class C_Port(ctypes.Structure):
             self.c_rects[i].print(3 + start)
 
         
-class C_Pin(ctypes.Structure):
+class C_Lef_Pin(ctypes.Structure):
     _fields_ = [("c_name", ctypes.c_char_p),
                 ("c_direction", ctypes.c_char_p),
                 ("c_use", ctypes.c_char_p),
                 ("c_shape", ctypes.c_char_p),
-                ("c_ports", ctypes.POINTER(C_Port)),
+                ("c_ports", ctypes.POINTER(C_Lef_Port)),
                 ("c_num_ports", ctypes.c_int)
             ]
 
@@ -91,7 +63,7 @@ class C_Pin(ctypes.Structure):
         self.c_direction: ByteString | None = None
         self.c_use: ByteString | None = None
         self.c_shape: ByteString | None = None
-        self.c_ports: List[C_Port] | None = None
+        self.c_ports: List[C_Lef_Port] | None = None
         self.c_num_ports: int = 0
 
     def print(self, start : int = 0):
@@ -105,15 +77,15 @@ class C_Pin(ctypes.Structure):
         for i in range(self.c_num_ports):
             self.c_ports[i].print(3 + start)
 
-class C_Obstruction(ctypes.Structure):
-    _fields_ = [("c_rects", ctypes.POINTER(C_Rect)),
+class C_Lef_Obstruction(ctypes.Structure):
+    _fields_ = [("c_rects", ctypes.POINTER(C_Lef_Rect)),
                 ("c_num_rects", ctypes.c_int)
             ]
 
     def __init__(self) -> None:
         super().__init__()
 
-        self.c_rects: List[C_Rect] | None = None
+        self.c_rects: List[C_Lef_Rect] | None = None
         self.c_num_rects: int = 0
 
     def print(self, start : int = 0):
@@ -123,7 +95,7 @@ class C_Obstruction(ctypes.Structure):
         for i in range(self.c_num_rects):
             self.c_rects[i].print(3 + start)
 
-class C_Macro(ctypes.Structure): 
+class C_Lef_Macro(ctypes.Structure): 
     # Fields description
     _fields_ = [("c_name", ctypes.c_char_p), 
                 ("c_class", ctypes.c_char_p),
@@ -137,8 +109,8 @@ class C_Macro(ctypes.Structure):
                 ("c_foreign_x", ctypes.c_double),
                 ("c_foreign_y", ctypes.c_double),
                 ("c_foreign_orient", ctypes.c_int),
-                ("c_pins", ctypes.POINTER(C_Pin)),
-                ("c_obs", C_Obstruction),
+                ("c_pins", ctypes.POINTER(C_Lef_Pin)),
+                ("c_obs", C_Lef_Obstruction),
                 ("c_num_pins", ctypes.c_int),
             ]
 
@@ -158,8 +130,8 @@ class C_Macro(ctypes.Structure):
         self.c_foreign_x: float = 0.0
         self.c_foreign_y: float = 0.0
         self.c_foreign_orient: int = 0
-        self.c_pins: List[C_Pin] | None = None
-        self.c_obs: C_Obstruction | None = None
+        self.c_pins: List[C_Lef_Pin] | None = None
+        self.c_obs: C_Lef_Obstruction | None = None
         self.c_num_pins: int = 0 
         
     def print(self, start : int = 0):
@@ -183,9 +155,9 @@ class C_Macro(ctypes.Structure):
 
         self.c_obs.print(3 + start)
 
-class C_Def(ctypes.Structure):
+class C_Lef(ctypes.Structure):
     # Fields description
-    _fields_ = [("c_macros", ctypes.POINTER(C_Macro)),
+    _fields_ = [("c_macros", ctypes.POINTER(C_Lef_Macro)),
                 ("c_num_macros", ctypes.c_int)
             ]
 
@@ -193,7 +165,7 @@ class C_Def(ctypes.Structure):
     def __init__(self) -> None:
         super().__init__()
 
-        self.c_macros: List[C_Macro] | None = None
+        self.c_macros: List[C_Lef_Macro] | None = None
         self.c_num_macros: int = 0
 
     def print(self):

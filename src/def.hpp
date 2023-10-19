@@ -130,11 +130,9 @@ struct Def {
 
     GCellGrid* gCellGridX_ {};
     int _numGCellGridX {};
-    int _numGCellGridXAllocated {};
 
     GCellGrid* gCellGridY_ {};
     int _numGCellGridY {};
-    int _numGCellGridYAllocated {};
 
     Component* components_ {};
     int _numComponents {};
@@ -147,14 +145,17 @@ struct Def {
 
     Row* rows_ {};
     int _numRows {};
-    int _numRowsAllocated {};
 
     Track* tracksX_ {};
     int _numTrackX {};
-    int _numTrackXAllocated {};
 
     Track* tracksY_ {};
     int _numTrackY {};
+
+    int _numGCellGridXAllocated {};
+    int _numGCellGridYAllocated {};
+    int _numRowsAllocated {};
+    int _numTrackXAllocated {};
     int _numTrackYAllocated {};
 
     Def() = default;

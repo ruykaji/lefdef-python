@@ -234,9 +234,9 @@ int DefReader::pinCallback(defrCallbackType_e t_type, defiPin* t_pin, void* t_us
     pin.net_ = (char*)malloc((strlen(t_pin->netName()) + 1) * sizeof(char));
     strcpy(pin.net_, t_pin->netName());
 
-    if (t_pin->hasDirection()) {
-        pin.direction_ = (char*)malloc((strlen(t_pin->direction()) + 1) * sizeof(char));
-        strcpy(pin.net_, t_pin->direction());
+    if (t_pin->hasUse()) {
+        pin.use_ = (char*)malloc((strlen(t_pin->use()) + 1) * sizeof(char));
+        strcpy(pin.use_, t_pin->use());
     }
 
     if (t_pin->isPlaced()) {
@@ -251,6 +251,11 @@ int DefReader::pinCallback(defrCallbackType_e t_type, defiPin* t_pin, void* t_us
     } else if (t_pin->isUnplaced()) {
         pin.status_ = (char*)malloc(9 * sizeof(char));
         strcpy(pin.status_, "UNPLACED");
+    }
+
+    if (t_pin->hasDirection()) {
+        pin.direction_ = (char*)malloc((strlen(t_pin->direction()) + 1) * sizeof(char));
+        strcpy(pin.direction_, t_pin->direction());
     }
 
     pin.x_ = t_pin->placementX();

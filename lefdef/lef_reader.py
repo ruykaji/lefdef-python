@@ -2,7 +2,7 @@ __all__ = ["C_LefReader"]
 
 import ctypes
 import os
-from .lef import C_Lef
+from ._lef import C_Lef
 
 class C_LefReaderInstance(ctypes.Structure):
         pass
@@ -28,21 +28,21 @@ class C_LefReader():
         self.lefdef.deleteLef.argtypes = [ctypes.POINTER(C_Lef)]
 
         # Add read reader function
-        self.lefdef.read.restype = ctypes.POINTER(C_Lef)
-        self.lefdef.read.argtypes = [ctypes.POINTER(C_LefReaderInstance), ctypes.c_char_p]
+        self.lefdef.readLef.restype = ctypes.POINTER(C_Lef)
+        self.lefdef.readLef.argtypes = [ctypes.POINTER(C_LefReaderInstance), ctypes.c_char_p]
 
         # Create reader instance as pointer
         self.reader = self.lefdef.createLefReader()
     
     def read(self, file_name : str) -> C_Lef:
-        result = self.lefdef.read(self.reader, file_name.encode("utf-8"))
+        result = self.lefdef.readLef(self.reader, file_name.encode("utf-8"))
 
         self.sessions.append(result)
 
         return result.contents
          
     def __del__(self):
-         for lef in self.sessions:
-              self.lefdef.deleteLef(lef)
+         for _lef in self.sessions:
+              self.lefdef.deleteLef(_lef)
          
          self.lefdef.deleteLefReader(self.reader)
