@@ -1,7 +1,35 @@
 #ifndef __DEF_H__
 #define __DEF_H__
 
+#include <stdlib.h>
+
 namespace def {
+struct Rect {
+    char* layer_ {};
+
+    int xl_ {};
+    int yl_ {};
+    int xh_ {};
+    int yh_ {};
+
+    Rect() = default;
+    ~Rect() = default;
+
+    Rect(const double& t_xl, const double& t_yl, const double& t_xh, const double& t_yh, const char* t_layer);
+
+    void destroy();
+};
+
+struct Port {
+    Rect* rects_ {};
+    int _numRects {};
+
+    Port() = default;
+    ~Port() = default;
+
+    void destroy();
+};
+
 struct Row {
     char* name_ {};
     char* macro_ {};
@@ -60,6 +88,26 @@ struct Component {
 };
 
 struct Pin {
+    char* name_ {};
+    char* net_ {};
+    char* use_ {};
+    char* status_ {};
+    char* direction_ {};
+
+    int orient_ {};
+    int x_ {};
+    int y_ {};
+
+    Rect* rects_ {};
+    int _numRects {};
+
+    Port* ports_ {};
+    int _numPorts {};
+
+    Pin() = default;
+    ~Pin() = default;
+
+    void destroy();
 };
 
 struct Net {
@@ -91,8 +139,11 @@ struct Def {
     Component* components_ {};
     int _numComponents {};
 
-    Net* nets {};
-    int _numNuts {};
+    Pin* pins_ {};
+    int _numPins {};
+
+    Net* nets_ {};
+    int _numNets {};
 
     Row* rows_ {};
     int _numRows {};

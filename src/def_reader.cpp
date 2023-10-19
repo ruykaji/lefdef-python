@@ -29,10 +29,10 @@ def::Def* DefReader::read(const char* t_fileName)
     defrSetGcellGridCbk(&gcellGridCallback);
     defrSetNetStartCbk(&netStartCallback);
     defrSetNetCbk(&netCallback);
-    defrSetSNetCbk(&specialNetCallback);
     defrSetStartPinsCbk(&pinStartCallback);
     defrSetPinCbk(&pinCallback);
     defrSetRowCbk(&rowCallback);
+    defrSetTrackCbk(&trackCallback);
 
     // Open def file and parser it
     // ====================================================
@@ -147,21 +147,17 @@ int DefReader::gcellGridCallback(defrCallbackType_e t_type, defiGcellGrid* t_gri
     def::Def* defInstance = static_cast<def::Def*>(t_userData);
 
     if (strcmp(t_grid->macro(), "X") == 0) {
-        def::GCellGrid gCellGridX {};
+        defInstance->addGCellGrid(def::GCellGrid(), 0);
 
         defInstance->gCellGridX_[defInstance->_numGCellGridX - 1].offset = t_grid->x();
         defInstance->gCellGridX_[defInstance->_numGCellGridX - 1].num = t_grid->xNum();
         defInstance->gCellGridX_[defInstance->_numGCellGridX - 1].step = t_grid->xStep();
-
-        defInstance->addGCellGrid(gCellGridX, 0);
     } else if (strcmp(t_grid->macro(), "Y") == 0) {
-        def::GCellGrid gCellGridY {};
+        defInstance->addGCellGrid(def::GCellGrid(), 1);
 
         defInstance->gCellGridY_[defInstance->_numGCellGridY - 1].offset = t_grid->x();
         defInstance->gCellGridY_[defInstance->_numGCellGridY - 1].num = t_grid->xNum();
         defInstance->gCellGridY_[defInstance->_numGCellGridY - 1].step = t_grid->xStep();
-
-        defInstance->addGCellGrid(gCellGridY, 1);
     }
 
     return 0;
@@ -169,25 +165,141 @@ int DefReader::gcellGridCallback(defrCallbackType_e t_type, defiGcellGrid* t_gri
 
 int DefReader::netStartCallback(defrCallbackType_e t_type, int t_number, void* t_userData)
 {
-    if (t_type != defrRowCbkType) {
+    if (t_type != defrNetStartCbkType) {
         return 2;
     }
 
     def::Def* defInstance = static_cast<def::Def*>(t_userData);
 
-    defInstance->nets = (def::Net*)malloc(t_number * sizeof(def::Net));
+    defInstance->nets_ = (def::Net*)malloc(t_number * sizeof(def::Net));
 
     return 0;
 }
 
 int DefReader::netCallback(defrCallbackType_e t_type, defiNet* t_net, void* t_userData)
 {
-    if (t_type != defrRowCbkType) {
+    if (t_type != defrNetCbkType) {
         return 2;
     }
 
     def::Net net {};
 
+    net.name_ = (char*)malloc((strlen(t_net->name()) + 1) * sizeof(char));
+    strcpy(net.name_, t_net->name());
+
+    net.instances_ = (char**)malloc(t_net->numConnections() * sizeof(char*));
+    net.pins_ = (char**)malloc(t_net->numConnections() * sizeof(char*));
+
+    net._numPins = t_net->numConnections();
+
+    for (std::size_t i = 0; i < t_net->numConnections(); ++i) {
+        net.instances_[i] = (char*)malloc((strlen(t_net->instance(i)) + 1) * sizeof(char));
+        net.pins_[i] = (char*)malloc((strlen(t_net->pin(i)) + 1) * sizeof(char));
+
+        strcpy(net.instances_[i], t_net->instance(i));
+        strcpy(net.pins_[i], t_net->pin(i));
+    }
+
+    def::Def* defInstance = static_cast<def::Def*>(t_userData);
+
+    defInstance->nets_[defInstance->_numNets++] = net;
+
+    return 0;
+}
+
+int DefReader::pinStartCallback(defrCallbackType_e t_type, int t_number, void* t_userData)
+{
+    if (t_type != defrStartPinsCbkType) {
+        return 2;
+    }
+
+    def::Def* defInstance = static_cast<def::Def*>(t_userData);
+
+    defInstance->pins_ = (def::Pin*)malloc(t_number * sizeof(def::Pin));
+
+    return 0;
+}
+
+int DefReader::pinCallback(defrCallbackType_e t_type, defiPin* t_pin, void* t_userData)
+{
+    if (t_type != defrPinCbkType) {
+        return 2;
+    }
+
+    def::Pin pin {};
+
+    pin.name_ = (char*)malloc((strlen(t_pin->pinName()) + 1) * sizeof(char));
+    strcpy(pin.name_, t_pin->pinName());
+
+    pin.net_ = (char*)malloc((strlen(t_pin->netName()) + 1) * sizeof(char));
+    strcpy(pin.net_, t_pin->netName());
+
+    if (t_pin->hasDirection()) {
+        pin.direction_ = (char*)malloc((strlen(t_pin->direction()) + 1) * sizeof(char));
+        strcpy(pin.net_, t_pin->direction());
+    }
+
+    if (t_pin->isPlaced()) {
+        pin.status_ = (char*)malloc(7 * sizeof(char));
+        strcpy(pin.status_, "PLACED");
+    } else if (t_pin->isFixed()) {
+        pin.status_ = (char*)malloc(6 * sizeof(char));
+        strcpy(pin.status_, "FIXED");
+    } else if (t_pin->isCover()) {
+        pin.status_ = (char*)malloc(6 * sizeof(char));
+        strcpy(pin.status_, "COVER");
+    } else if (t_pin->isUnplaced()) {
+        pin.status_ = (char*)malloc(9 * sizeof(char));
+        strcpy(pin.status_, "UNPLACED");
+    }
+
+    pin.x_ = t_pin->placementX();
+    pin.y_ = t_pin->placementY();
+    pin.orient_ = t_pin->orient();
+
+    if (t_pin->numLayer() != 0) {
+        int32_t xl {}, yl {}, xh {}, yh {};
+        pin.rects_ = (def::Rect*)malloc(t_pin->numLayer() * sizeof(def::Rect));
+
+        for (std::size_t i = 0; i < t_pin->numLayer(); ++i) {
+            t_pin->bounds(i, &xl, &yl, &xh, &yh);
+
+            pin.rects_[pin._numRects++] = def::Rect(xl, yl, xh, yh, t_pin->layer(i));
+        }
+    }
+
+    if (t_pin->numPorts() != 0) {
+        pin.ports_ = (def::Port*)malloc(t_pin->numPorts() * sizeof(def::Port));
+
+        for (std::size_t i = 0; i < t_pin->numPorts(); ++i) {
+            defiPinPort* pinPort = t_pin->pinPort(i);
+            int32_t xl {}, yl {}, xh {}, yh {};
+            def::Port port {};
+
+            port.rects_ = (def::Rect*)malloc(pinPort->numLayer() * sizeof(def::Rect));
+
+            for (std::size_t j = 0; j < pinPort->numLayer(); ++j) {
+                pinPort->bounds(j, &xl, &yl, &xh, &yh);
+
+                if (pinPort->isPlaced() || pinPort->isFixed() || pinPort->isCover()) {
+                    int32_t xPlacement = pinPort->placementX();
+                    int32_t yPlacement = pinPort->placementY();
+
+                    xl += xPlacement;
+                    yl += yPlacement;
+                    xh += xPlacement;
+                    yh += yPlacement;
+                }
+
+                port.rects_[port._numRects++] = def::Rect(xl, yl, xh, yh, pinPort->layer(j));
+            }
+
+            pin.ports_[pin._numPorts++] = port;
+        }
+    }
+
+    def::Def* defInstance = static_cast<def::Def*>(t_userData);
+    defInstance->pins_[defInstance->_numPins++] = pin;
 
     return 0;
 }
