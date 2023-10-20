@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='lefdef',
-    version='0.3.0',
+    version='0.5.0',
     packages=find_packages(),
     package_data={
         'lefdef': ['lib/*.*'],

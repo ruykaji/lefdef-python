@@ -18,7 +18,7 @@ class C_LefReader():
         # Open library
         if (platform.system() == "Windows"):
             self.lefdef = ctypes.CDLL(os.path.join(
-                os.path.dirname(__file__), "lib/liblefdef.dll"), winmode=0)
+                os.path.dirname(__file__), "lib/lefdef.dll"), winmode=0)
 
         # Open library
         if (platform.system() == "Linux"):
@@ -48,12 +48,16 @@ class C_LefReader():
         self.reader = self.lefdef.createLefReader()
 
     def read(self, file_name: str) -> C_Lef:
-        result = self.lefdef.readLef(self.reader, file_name.encode("utf-8"))
+        if(os.path.exists(file_name)):
+            result = self.lefdef.readLef(self.reader, file_name.encode("utf-8"))
 
-        self.sessions.append(result)
+            self.sessions.append(result)
 
-        return result.contents
+            return result.contents
 
+        else:
+            raise RuntimeError("Can't open file: " + file_name)
+        
     def __del__(self):
         for _lef in self.sessions:
             self.lefdef.deleteLef(_lef)
