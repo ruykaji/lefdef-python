@@ -216,7 +216,7 @@ _def = def_reader.read("/path/to/def/file.def")
 
 die_area_width = _def.c_die_area_width
 die_area_height = _def.c_die_area_height
-g_cell_grid_x = _def.g_cell_grid_x
+g_cell_grid_x = _def.c_g_cell_grid_x
 num_g_cell_grid_x = _def.c_num_g_cell_grid_x
 g_cell_grid_y = _def.c_g_cell_grid_y
 components = _def.c_components
@@ -228,15 +228,15 @@ tracks_y = _def.c_tracks_y
 
 # Access gCellGrid by x axis
 for i in range(_def.c_num_g_cell_grid_x):
-    offset_x = g_cell_grid_x[i]
-    num_x = g_cell_grid_x[i]
-    step_y = g_cell_grid_x[i]
+    offset_x = g_cell_grid_x[i].c_offset
+    num_x = g_cell_grid_x[i].c_num
+    step_y = g_cell_grid_x[i].c_step
 
 # Access gCellGrid by y axis
 for i in range(_def.c_num_g_cell_grid_y):
-    offset_y = g_cell_grid_y[i]
-    num_y = g_cell_grid_y[i]
-    step_y = g_cell_grid_y[i]
+    offset_y = g_cell_grid_y[i].c_offset
+    num_y = g_cell_grid_y[i].c_num
+    step_y = g_cell_grid_y[i].c_step
 
 # Access components
 for i in range(_def.c_num_components):
@@ -286,7 +286,7 @@ for i in range(_def.c_num_nets):
     name = nets[i].c_name
 
     for j in range(nets[i].c_num_pins):
-        isinstance = nets[i].c_isinstance[j]
+        instance = nets[i].c_instances[j]
         pins = nets[i].c_pins[j]
 
 # Access rows
