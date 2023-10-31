@@ -6,20 +6,20 @@ from typing import ByteString, List
 
 class C_Def_Rect(ctypes.Structure):
     _fields_ = [("c_layer", ctypes.c_char_p),
-                ("c_xl", ctypes.c_double),
-                ("c_yl", ctypes.c_double),
-                ("c_xh", ctypes.c_double),
-                ("c_yh", ctypes.c_double),
+                ("c_xl", ctypes.c_int32),
+                ("c_yl", ctypes.c_int32),
+                ("c_xh", ctypes.c_int32),
+                ("c_yh", ctypes.c_int32),
                 ]
 
     def __init__(self) -> None:
         super().__init__()
 
         self.c_layer: ByteString | None = None
-        self.c_xl: float = 0.0
-        self.c_xh: float = 0.0
-        self.c_yl: float = 0.0
-        self.c_yh: float = 0.0
+        self.c_xl: int = 0.0
+        self.c_xh: int = 0.0
+        self.c_yl: int = 0.0
+        self.c_yh: int = 0.0
 
     def print(self, start: int = 0):
         print(f"\033[95m{' ' *(start - 3)}[RECT]\033[0m")
